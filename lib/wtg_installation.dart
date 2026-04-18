@@ -80,14 +80,14 @@ class WtgInstallationScreen extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         decoration: BoxDecoration(
-          color: Colors.grey.shade200, // Light grey background like the image
+          color: Colors.grey.shade200,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
           children: [
             Icon(
               icon,
-              color: Colors.blue.shade700, // Blue icon color matching the image
+              color: Colors.blue.shade700,
               size: 26,
             ),
             const SizedBox(width: 16),
@@ -103,7 +103,7 @@ class WtgInstallationScreen extends StatelessWidget {
             ),
             const Icon(
               Icons.chevron_right,
-              color: Colors.black54, // Arrow indicator on the right
+              color: Colors.black54,
             ),
           ],
         ),
