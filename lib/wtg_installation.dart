@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'tower1.dart'; // Import the new Tower1 screen
+import 'tower1.dart';
+import 'tower_installation.dart'; // Import the new Tower Installation screen
 
 class WtgInstallationScreen extends StatelessWidget {
   const WtgInstallationScreen({super.key});
@@ -7,10 +8,8 @@ class WtgInstallationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Using a very light background color as seen in the image
       backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppBar(
-        // Flutter automatically adds the back button when this page is navigated to
         title: const Text(
           'WTG Installation',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
@@ -55,7 +54,6 @@ class WtgInstallationScreen extends StatelessWidget {
     );
   }
 
-  // Reusable helper method to create the list items matching the uploaded image design
   Widget _buildListItem({
     required BuildContext context,
     required String title,
@@ -64,13 +62,16 @@ class WtgInstallationScreen extends StatelessWidget {
     return InkWell(
       onTap: () {
         if (title == 'Tower1') {
-          // Navigate to the Tower1 Installation Screen
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const Tower1Screen()),
           );
+        } else if (title == 'Tower Installation') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const TowerInstallationScreen()),
+          );
         } else {
-          // Placeholder action for other menu items
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Opening $title...')),
           );
@@ -112,7 +113,9 @@ class WtgInstallationScreen extends StatelessWidget {
   }
 }
 
+
 // import 'package:flutter/material.dart';
+// import 'tower1.dart'; // Import the new Tower1 screen
 //
 // class WtgInstallationScreen extends StatelessWidget {
 //   const WtgInstallationScreen({super.key});
@@ -176,23 +179,31 @@ class WtgInstallationScreen extends StatelessWidget {
 //   }) {
 //     return InkWell(
 //       onTap: () {
-//         // Placeholder action: You can replace this with actual navigation later
-//         ScaffoldMessenger.of(context).showSnackBar(
-//           SnackBar(content: Text('Opening $title...')),
-//         );
+//         if (title == 'Tower1') {
+//           // Navigate to the Tower1 Installation Screen
+//           Navigator.push(
+//             context,
+//             MaterialPageRoute(builder: (context) => const Tower1Screen()),
+//           );
+//         } else {
+//           // Placeholder action for other menu items
+//           ScaffoldMessenger.of(context).showSnackBar(
+//             SnackBar(content: Text('Opening $title...')),
+//           );
+//         }
 //       },
 //       borderRadius: BorderRadius.circular(12),
 //       child: Container(
 //         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
 //         decoration: BoxDecoration(
-//           color: Colors.grey.shade200, // Light grey background like the image
+//           color: Colors.grey.shade200,
 //           borderRadius: BorderRadius.circular(12),
 //         ),
 //         child: Row(
 //           children: [
 //             Icon(
 //               icon,
-//               color: Colors.blue.shade700, // Blue icon color matching the image
+//               color: Colors.blue.shade700,
 //               size: 26,
 //             ),
 //             const SizedBox(width: 16),
@@ -208,7 +219,7 @@ class WtgInstallationScreen extends StatelessWidget {
 //             ),
 //             const Icon(
 //               Icons.chevron_right,
-//               color: Colors.black54, // Arrow indicator on the right
+//               color: Colors.black54,
 //             ),
 //           ],
 //         ),
@@ -216,3 +227,4 @@ class WtgInstallationScreen extends StatelessWidget {
 //     );
 //   }
 // }
+
