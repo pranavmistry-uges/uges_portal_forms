@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 
-class RotorHubInstallationScreen extends StatefulWidget {
-  const RotorHubInstallationScreen({super.key});
+class BladeInstallationScreen extends StatefulWidget {
+  const BladeInstallationScreen({super.key});
 
   @override
-  State<RotorHubInstallationScreen> createState() => _RotorHubInstallationScreenState();
+  State<BladeInstallationScreen> createState() => _BladeInstallationScreenState();
 }
 
-class _RotorHubInstallationScreenState extends State<RotorHubInstallationScreen> {
+class _BladeInstallationScreenState extends State<BladeInstallationScreen> {
   // Top Dropdowns
   String? _selectedProject;
   String? _selectedWindfarm;
@@ -20,8 +20,8 @@ class _RotorHubInstallationScreenState extends State<RotorHubInstallationScreen>
 
   // Dropdown States
   String? _turbine;
-  String? _nacelleId;
-  String? _hubSerial;
+  String? _bladeNo;
+  String? _bladeId;
   String? _boltId;
   String? _weather;
   String? _contractor;
@@ -30,12 +30,8 @@ class _RotorHubInstallationScreenState extends State<RotorHubInstallationScreen>
 
   // Text Controllers
   final TextEditingController _boltsCtrl = TextEditingController();
-  final TextEditingController _boltSizeGradeCtrl = TextEditingController();
   final TextEditingController _torqueCtrl = TextEditingController();
-  final TextEditingController _lubricantCtrl = TextEditingController();
-  final TextEditingController _materialGuideCtrl = TextEditingController();
-  final TextEditingController _weightCtrl = TextEditingController();
-  final TextEditingController _pitchTypeCtrl = TextEditingController();
+  final TextEditingController _instrumentCtrl = TextEditingController();
   final TextEditingController _remarksCtrl = TextEditingController();
 
   // Date States
@@ -52,12 +48,8 @@ class _RotorHubInstallationScreenState extends State<RotorHubInstallationScreen>
   @override
   void dispose() {
     _boltsCtrl.dispose();
-    _boltSizeGradeCtrl.dispose();
     _torqueCtrl.dispose();
-    _lubricantCtrl.dispose();
-    _materialGuideCtrl.dispose();
-    _weightCtrl.dispose();
-    _pitchTypeCtrl.dispose();
+    _instrumentCtrl.dispose();
     _remarksCtrl.dispose();
     super.dispose();
   }
@@ -67,18 +59,14 @@ class _RotorHubInstallationScreenState extends State<RotorHubInstallationScreen>
   void _resetForm() {
     _formKey.currentState?.reset();
     _boltsCtrl.clear();
-    _boltSizeGradeCtrl.clear();
     _torqueCtrl.clear();
-    _lubricantCtrl.clear();
-    _materialGuideCtrl.clear();
-    _weightCtrl.clear();
-    _pitchTypeCtrl.clear();
+    _instrumentCtrl.clear();
     _remarksCtrl.clear();
 
     setState(() {
       _turbine = null;
-      _nacelleId = null;
-      _hubSerial = null;
+      _bladeNo = null;
+      _bladeId = null;
       _boltId = null;
       _weather = null;
       _contractor = null;
@@ -95,7 +83,7 @@ class _RotorHubInstallationScreenState extends State<RotorHubInstallationScreen>
   void _submitForm() {
     if (_formKey.currentState?.validate() ?? false) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Rotor Hub Installation data submitted successfully!')),
+        const SnackBar(content: Text('Blade Installation data submitted successfully!')),
       );
       // Automatically reset the form after successful submission
       _resetForm();
@@ -171,7 +159,7 @@ class _RotorHubInstallationScreenState extends State<RotorHubInstallationScreen>
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text(
-          'Rotor Hub Installation',
+          'Blade Installation',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
         backgroundColor: Colors.blue.shade800,
@@ -194,8 +182,8 @@ class _RotorHubInstallationScreenState extends State<RotorHubInstallationScreen>
             // Show Form conditionally
             if (_selectedProject != null && _selectedWindfarm != null && _selectedCluster != null) ...[
               const Text(
-                'Rotor Hub installation form',
-                style: TextStyle(color: Colors.blue, fontSize: 22, fontWeight: FontWeight.bold),
+                'Blade Installation form',
+                style: TextStyle(color: Colors.lightBlueAccent, fontSize: 22, fontWeight: FontWeight.bold), // Sky blue color as requested
               ),
               const SizedBox(height: 20),
 
@@ -206,29 +194,14 @@ class _RotorHubInstallationScreenState extends State<RotorHubInstallationScreen>
                   children: [
                     _buildFormDropdown('Turbine', ['T-01', 'T-02', 'T-03'], _turbine, (v) => setState(() => _turbine = v)),
                     const SizedBox(height: 16),
-                    _buildFormDropdown('Nacelle ID', ['N-101', 'N-102', 'N-103'], _nacelleId, (v) => setState(() => _nacelleId = v)),
+                    _buildFormDropdown('Blade No.', ['Blade-1', 'Blade-2', 'Blade-3'], _bladeNo, (v) => setState(() => _bladeNo = v)),
                     const SizedBox(height: 16),
-                    _buildFormDropdown('Hub Serial Number', ['HS-001', 'HS-002', 'HS-003'], _hubSerial, (v) => setState(() => _hubSerial = v)),
+                    _buildFormDropdown('Blade ID', ['BID-001', 'BID-002', 'BID-003'], _bladeId, (v) => setState(() => _bladeId = v)),
                     const SizedBox(height: 16),
                     _buildFormDropdown('Bolt ID', ['B-01', 'B-02', 'B-03'], _boltId, (v) => setState(() => _boltId = v)),
                     const SizedBox(height: 16),
 
                     _buildTextField('No. of Bolts', _boltsCtrl, isNumber: true),
-                    const SizedBox(height: 16),
-                    _buildTextField('Bolt Size & Grade', _boltSizeGradeCtrl),
-                    const SizedBox(height: 16),
-                    _buildTextField('Torque Value', _torqueCtrl, isNumber: true),
-                    const SizedBox(height: 16),
-                    _buildTextField('Lubricant Used', _lubricantCtrl),
-                    const SizedBox(height: 16),
-                    _buildTextField('Material Guide', _materialGuideCtrl),
-                    const SizedBox(height: 16),
-                    _buildTextField('Weight', _weightCtrl, isNumber: true),
-                    const SizedBox(height: 16),
-                    _buildTextField('Pitch Type', _pitchTypeCtrl),
-                    const SizedBox(height: 16),
-
-                    _buildFormDropdown('Weather', ['Sunny', 'Cloudy', 'Rainy', 'Windy'], _weather, (v) => setState(() => _weather = v)),
                     const SizedBox(height: 16),
 
                     // Date Pickers
@@ -237,6 +210,13 @@ class _RotorHubInstallationScreenState extends State<RotorHubInstallationScreen>
                     _buildDateField('Lifting End', _liftingEnd, () => _selectDate(context, false)),
                     const SizedBox(height: 16),
 
+                    _buildTextField('Torque Value', _torqueCtrl, isNumber: true),
+                    const SizedBox(height: 16),
+                    _buildTextField('Instrument Used', _instrumentCtrl),
+                    const SizedBox(height: 16),
+
+                    _buildFormDropdown('Weather', ['Sunny', 'Cloudy', 'Rainy', 'Windy'], _weather, (v) => setState(() => _weather = v)),
+                    const SizedBox(height: 16),
                     _buildFormDropdown('Contractor', ['Contractor X', 'Contractor Y'], _contractor, (v) => setState(() => _contractor = v)),
                     const SizedBox(height: 16),
                     _buildFormDropdown('Supervisor', ['Supervisor 1', 'Supervisor 2'], _supervisor, (v) => setState(() => _supervisor = v)),
@@ -371,7 +351,7 @@ class _RotorHubInstallationScreenState extends State<RotorHubInstallationScreen>
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
-                      child: const Text('Submit RotorHub', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      child: const Text('Submit blade', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     ),
                   ],
                 ),
@@ -392,7 +372,7 @@ class _RotorHubInstallationScreenState extends State<RotorHubInstallationScreen>
         border: const OutlineInputBorder(),
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       ),
-      initialValue: value,
+      value: value,
       items: items.map((i) => DropdownMenuItem(value: i, child: Text(i))).toList(),
       onChanged: onChanged,
     );
@@ -406,7 +386,7 @@ class _RotorHubInstallationScreenState extends State<RotorHubInstallationScreen>
         filled: true,
         fillColor: Colors.grey.shade50,
       ),
-      initialValue: value,
+      value: value,
       validator: (val) => val == null ? 'Required' : null,
       items: items.map((i) => DropdownMenuItem(value: i, child: Text(i))).toList(),
       onChanged: onChanged,
