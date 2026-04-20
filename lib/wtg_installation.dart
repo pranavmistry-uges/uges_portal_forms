@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'tower1.dart';
-import 'tower_installation.dart'; // Import the Tower Installation screen
-import 'nacelle_installation.dart'; // Import the new Nacelle Installation screen
+import 'tower_installation.dart';
+import 'nacelle_installation.dart';
+import 'rotor_hub_installation.dart'; // Import the new Rotor Hub Installation screen
 
 class WtgInstallationScreen extends StatelessWidget {
   const WtgInstallationScreen({super.key});
@@ -77,6 +78,11 @@ class WtgInstallationScreen extends StatelessWidget {
             context,
             MaterialPageRoute(builder: (context) => const NacelleInstallationScreen()),
           );
+        } else if (title == 'Rotor Hub') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const RotorHubInstallationScreen()),
+          );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Opening $title...')),
@@ -120,9 +126,11 @@ class WtgInstallationScreen extends StatelessWidget {
 }
 
 
+
 // import 'package:flutter/material.dart';
 // import 'tower1.dart';
-// import 'tower_installation.dart'; // Import the new Tower Installation screen
+// import 'tower_installation.dart'; // Import the Tower Installation screen
+// import 'nacelle_installation.dart'; // Import the new Nacelle Installation screen
 //
 // class WtgInstallationScreen extends StatelessWidget {
 //   const WtgInstallationScreen({super.key});
@@ -192,6 +200,11 @@ class WtgInstallationScreen extends StatelessWidget {
 //           Navigator.push(
 //             context,
 //             MaterialPageRoute(builder: (context) => const TowerInstallationScreen()),
+//           );
+//         } else if (title == 'Nacelle Installation') {
+//           Navigator.push(
+//             context,
+//             MaterialPageRoute(builder: (context) => const NacelleInstallationScreen()),
 //           );
 //         } else {
 //           ScaffoldMessenger.of(context).showSnackBar(
