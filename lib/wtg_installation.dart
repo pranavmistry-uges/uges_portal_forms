@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'tower1.dart';
-import 'tower_installation.dart'; // Import the new Tower Installation screen
+import 'tower_installation.dart'; // Import the Tower Installation screen
+import 'nacelle_installation.dart'; // Import the new Nacelle Installation screen
 
 class WtgInstallationScreen extends StatelessWidget {
   const WtgInstallationScreen({super.key});
@@ -71,6 +72,11 @@ class WtgInstallationScreen extends StatelessWidget {
             context,
             MaterialPageRoute(builder: (context) => const TowerInstallationScreen()),
           );
+        } else if (title == 'Nacelle Installation') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const NacelleInstallationScreen()),
+          );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Opening $title...')),
@@ -115,7 +121,8 @@ class WtgInstallationScreen extends StatelessWidget {
 
 
 // import 'package:flutter/material.dart';
-// import 'tower1.dart'; // Import the new Tower1 screen
+// import 'tower1.dart';
+// import 'tower_installation.dart'; // Import the new Tower Installation screen
 //
 // class WtgInstallationScreen extends StatelessWidget {
 //   const WtgInstallationScreen({super.key});
@@ -123,10 +130,8 @@ class WtgInstallationScreen extends StatelessWidget {
 //   @override
 //   Widget build(BuildContext context) {
 //     return Scaffold(
-//       // Using a very light background color as seen in the image
 //       backgroundColor: const Color(0xFFF8F9FA),
 //       appBar: AppBar(
-//         // Flutter automatically adds the back button when this page is navigated to
 //         title: const Text(
 //           'WTG Installation',
 //           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
@@ -171,7 +176,6 @@ class WtgInstallationScreen extends StatelessWidget {
 //     );
 //   }
 //
-//   // Reusable helper method to create the list items matching the uploaded image design
 //   Widget _buildListItem({
 //     required BuildContext context,
 //     required String title,
@@ -180,13 +184,16 @@ class WtgInstallationScreen extends StatelessWidget {
 //     return InkWell(
 //       onTap: () {
 //         if (title == 'Tower1') {
-//           // Navigate to the Tower1 Installation Screen
 //           Navigator.push(
 //             context,
 //             MaterialPageRoute(builder: (context) => const Tower1Screen()),
 //           );
+//         } else if (title == 'Tower Installation') {
+//           Navigator.push(
+//             context,
+//             MaterialPageRoute(builder: (context) => const TowerInstallationScreen()),
+//           );
 //         } else {
-//           // Placeholder action for other menu items
 //           ScaffoldMessenger.of(context).showSnackBar(
 //             SnackBar(content: Text('Opening $title...')),
 //           );
@@ -227,4 +234,3 @@ class WtgInstallationScreen extends StatelessWidget {
 //     );
 //   }
 // }
-

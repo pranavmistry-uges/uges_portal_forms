@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 
-class TowerInstallationScreen extends StatefulWidget {
-  const TowerInstallationScreen({super.key});
+class NacelleInstallationScreen extends StatefulWidget {
+  const NacelleInstallationScreen({super.key});
 
   @override
-  State<TowerInstallationScreen> createState() => _TowerInstallationScreenState();
+  State<NacelleInstallationScreen> createState() => _NacelleInstallationScreenState();
 }
 
-class _TowerInstallationScreenState extends State<TowerInstallationScreen> {
+class _NacelleInstallationScreenState extends State<NacelleInstallationScreen> {
   // Top Dropdowns
   String? _selectedProject;
   String? _selectedWindfarm;
@@ -18,8 +18,12 @@ class _TowerInstallationScreenState extends State<TowerInstallationScreen> {
   final _formKey = GlobalKey<FormState>();
 
   // Dropdown States
+  String? _nacelleId;
   String? _turbine;
-  String? _towerNo;
+  String? _generatorId;
+  String? _gearBoxId;
+  String? _liftId;
+  String? _boltId;
   String? _contractor;
   String? _supervisor;
   String? _weather;
@@ -29,12 +33,9 @@ class _TowerInstallationScreenState extends State<TowerInstallationScreen> {
   final TextEditingController _boltsCtrl = TextEditingController();
   final TextEditingController _torqueCtrl = TextEditingController();
   final TextEditingController _instrumentCtrl = TextEditingController();
-  final TextEditingController _manufacturerCtrl = TextEditingController();
+  final TextEditingController _slewingRimCtrl = TextEditingController();
+  final TextEditingController _yawDriveCtrl = TextEditingController();
   final TextEditingController _alignmentCtrl = TextEditingController();
-  final TextEditingController _craneIdCtrl = TextEditingController();
-  final TextEditingController _craneCapacityCtrl = TextEditingController();
-  final TextEditingController _sequenceCtrl = TextEditingController();
-  final TextEditingController _remarksCtrl = TextEditingController();
 
   // Date States
   DateTime? _liftingStart;
@@ -49,12 +50,9 @@ class _TowerInstallationScreenState extends State<TowerInstallationScreen> {
     _boltsCtrl.dispose();
     _torqueCtrl.dispose();
     _instrumentCtrl.dispose();
-    _manufacturerCtrl.dispose();
+    _slewingRimCtrl.dispose();
+    _yawDriveCtrl.dispose();
     _alignmentCtrl.dispose();
-    _craneIdCtrl.dispose();
-    _craneCapacityCtrl.dispose();
-    _sequenceCtrl.dispose();
-    _remarksCtrl.dispose();
     super.dispose();
   }
 
@@ -65,16 +63,17 @@ class _TowerInstallationScreenState extends State<TowerInstallationScreen> {
     _boltsCtrl.clear();
     _torqueCtrl.clear();
     _instrumentCtrl.clear();
-    _manufacturerCtrl.clear();
+    _slewingRimCtrl.clear();
+    _yawDriveCtrl.clear();
     _alignmentCtrl.clear();
-    _craneIdCtrl.clear();
-    _craneCapacityCtrl.clear();
-    _sequenceCtrl.clear();
-    _remarksCtrl.clear();
 
     setState(() {
+      _nacelleId = null;
       _turbine = null;
-      _towerNo = null;
+      _generatorId = null;
+      _gearBoxId = null;
+      _liftId = null;
+      _boltId = null;
       _contractor = null;
       _supervisor = null;
       _weather = null;
@@ -89,7 +88,7 @@ class _TowerInstallationScreenState extends State<TowerInstallationScreen> {
   void _submitForm() {
     if (_formKey.currentState?.validate() ?? false) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Tower Installation data submitted successfully!')),
+        const SnackBar(content: Text('Nacelle Installation data submitted successfully!')),
       );
       // Automatically reset the form after successful submission
       _resetForm();
@@ -147,7 +146,7 @@ class _TowerInstallationScreenState extends State<TowerInstallationScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Tower Installation', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+        title: const Text('Nacelle Installation', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
         backgroundColor: Colors.blue.shade800,
         foregroundColor: Colors.white,
       ),
@@ -161,14 +160,14 @@ class _TowerInstallationScreenState extends State<TowerInstallationScreen> {
             const SizedBox(height: 12),
             _buildDropdown('Windfarm', ['Windfarm North', 'Windfarm South'], _selectedWindfarm, (val) => setState(() => _selectedWindfarm = val)),
             const SizedBox(height: 12),
-            _buildDropdown('Cluster', ['Cluster 1', 'Cluster 2'], _selectedCluster, (val) => setState(() => _selectedCluster = val)),
+            _buildDropdown('Clusters', ['Cluster 1', 'Cluster 2'], _selectedCluster, (val) => setState(() => _selectedCluster = val)),
 
             const Divider(height: 40, thickness: 1),
 
             // Show Form conditionally
             if (_selectedProject != null && _selectedWindfarm != null && _selectedCluster != null) ...[
               const Text(
-                'Tower installation',
+                'Nacelle Installation form',
                 style: TextStyle(color: Colors.lightBlue, fontSize: 22, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
@@ -178,17 +177,30 @@ class _TowerInstallationScreenState extends State<TowerInstallationScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    _buildFormDropdown('Nacelle ID', ['N-101', 'N-102', 'N-103'], _nacelleId, (v) => setState(() => _nacelleId = v)),
+                    const SizedBox(height: 16),
                     _buildFormDropdown('Turbine', ['T-01', 'T-02', 'T-03'], _turbine, (v) => setState(() => _turbine = v)),
                     const SizedBox(height: 16),
-                    _buildFormDropdown('Tower No.', ['TW-01', 'TW-02', 'TW-03', 'TW-04'], _towerNo, (v) => setState(() => _towerNo = v)),
+                    _buildFormDropdown('Generator ID', ['G-01', 'G-02', 'G-03'], _generatorId, (v) => setState(() => _generatorId = v)),
                     const SizedBox(height: 16),
+                    _buildFormDropdown('Gear Box ID', ['GB-01', 'GB-02', 'GB-03'], _gearBoxId, (v) => setState(() => _gearBoxId = v)),
+                    const SizedBox(height: 16),
+                    _buildFormDropdown('Lift ID', ['L-01', 'L-02'], _liftId, (v) => setState(() => _liftId = v)),
+                    const SizedBox(height: 16),
+                    _buildFormDropdown('Bolt ID', ['B-01', 'B-02', 'B-03'], _boltId, (v) => setState(() => _boltId = v)),
+                    const SizedBox(height: 16),
+
                     _buildTextField('No. of Bolts', _boltsCtrl, isNumber: true),
                     const SizedBox(height: 16),
                     _buildTextField('Torque Value', _torqueCtrl, isNumber: true),
                     const SizedBox(height: 16),
                     _buildTextField('Instrument Used', _instrumentCtrl),
                     const SizedBox(height: 16),
-                    _buildTextField('Manufacturer', _manufacturerCtrl),
+                    _buildTextField('Slewing Rim', _slewingRimCtrl),
+                    const SizedBox(height: 16),
+                    _buildTextField('Yaw Drive Details', _yawDriveCtrl),
+                    const SizedBox(height: 16),
+                    _buildTextField('Alignment Check', _alignmentCtrl),
                     const SizedBox(height: 16),
 
                     // Date Pickers
@@ -197,36 +209,13 @@ class _TowerInstallationScreenState extends State<TowerInstallationScreen> {
                     _buildDateField('Lifting End', _liftingEnd, () => _selectDate(context, false)),
                     const SizedBox(height: 16),
 
-                    _buildTextField('Alignment Check', _alignmentCtrl),
-                    const SizedBox(height: 16),
-                    _buildTextField('Crane ID/Model', _craneIdCtrl),
-                    const SizedBox(height: 16),
-                    _buildTextField('Crane Capacity', _craneCapacityCtrl),
-                    const SizedBox(height: 16),
-                    _buildTextField('Torqueing Sequence Reference', _sequenceCtrl),
-                    const SizedBox(height: 16),
-
                     _buildFormDropdown('Contractor', ['Contractor X', 'Contractor Y'], _contractor, (v) => setState(() => _contractor = v)),
                     const SizedBox(height: 16),
                     _buildFormDropdown('Supervisor', ['Supervisor 1', 'Supervisor 2'], _supervisor, (v) => setState(() => _supervisor = v)),
                     const SizedBox(height: 16),
-                    _buildFormDropdown('Weather Condition', ['Sunny', 'Cloudy', 'Rainy', 'Windy'], _weather, (v) => setState(() => _weather = v)),
+                    _buildFormDropdown('Weather', ['Sunny', 'Cloudy', 'Rainy', 'Windy'], _weather, (v) => setState(() => _weather = v)),
                     const SizedBox(height: 16),
                     _buildFormDropdown('Status', ['Pending', 'In Progress', 'Completed'], _status, (v) => setState(() => _status = v)),
-                    const SizedBox(height: 16),
-
-                    // Textarea
-                    TextFormField(
-                      controller: _remarksCtrl,
-                      maxLines: 3,
-                      decoration: InputDecoration(
-                        labelText: 'Remarks',
-                        alignLabelWithHint: true,
-                        border: const OutlineInputBorder(),
-                        filled: true,
-                        fillColor: Colors.grey.shade50,
-                      ),
-                    ),
                     const SizedBox(height: 24),
 
                     // Document Upload Section
@@ -250,7 +239,7 @@ class _TowerInstallationScreenState extends State<TowerInstallationScreen> {
                           ElevatedButton.icon(
                             onPressed: _pickDocument,
                             icon: const Icon(Icons.upload_file, size: 18),
-                            label: const Text('Upload Documents'),
+                            label: const Text('Upload Document'),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blue.shade100,
                               foregroundColor: Colors.blue.shade900,
@@ -266,7 +255,7 @@ class _TowerInstallationScreenState extends State<TowerInstallationScreen> {
                     FormField<bool>(
                       initialValue: _isVerified,
                       validator: (value) {
-                        if (value != true) return 'This verification is required to proceed.';
+                        if (value != true) return 'Verification is required to proceed.';
                         return null;
                       },
                       builder: (FormFieldState<bool> state) {
@@ -275,7 +264,7 @@ class _TowerInstallationScreenState extends State<TowerInstallationScreen> {
                           children: [
                             CheckboxListTile(
                               title: const Text(
-                                'Ensure all tower sections are installed and verified before moving to nacelle installation.',
+                                'Verify mechanical and electrical connections, alignment, and safety checks.',
                                 style: TextStyle(fontSize: 14),
                               ),
                               value: state.value,
@@ -309,7 +298,7 @@ class _TowerInstallationScreenState extends State<TowerInstallationScreen> {
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
-                      child: const Text('Submit Tower installation', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      child: const Text('Submit nacelle', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     ),
                   ],
                 ),
