@@ -372,7 +372,7 @@ class _BladeInstallationScreenState extends State<BladeInstallationScreen> {
         border: const OutlineInputBorder(),
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       ),
-      value: value,
+      initialValue: value,
       items: items.map((i) => DropdownMenuItem(value: i, child: Text(i))).toList(),
       onChanged: onChanged,
     );
@@ -386,7 +386,7 @@ class _BladeInstallationScreenState extends State<BladeInstallationScreen> {
         filled: true,
         fillColor: Colors.grey.shade50,
       ),
-      value: value,
+      initialValue: value,
       validator: (val) => val == null ? 'Required' : null,
       items: items.map((i) => DropdownMenuItem(value: i, child: Text(i))).toList(),
       onChanged: onChanged,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'crane_installation.dart'; // Import the Crane Installation screen
-import 'wtg_installation.dart'; // Import the new WTG Installation screen
+import 'wtg_installation.dart'; // Import the WTG Installation screen
+import 'safety_quality.dart'; // Import the new Safety & Quality screen
 
 void main() {
   runApp(const MyApp());
@@ -109,6 +110,8 @@ class MainScreen extends StatelessWidget {
             nextScreen = const CraneInstallationScreen();
           } else if (title == 'WTG Installation') {
             nextScreen = const WtgInstallationScreen();
+          } else if (title == 'Safety & Quality') {
+            nextScreen = const SafetyQualityScreen();
           } else {
             nextScreen = DetailScreen(pageTitle: title);
           }
@@ -207,10 +210,9 @@ class DetailScreen extends StatelessWidget {
   }
 }
 
-
 // import 'package:flutter/material.dart';
-// import 'crane_installation.dart'; // Importing the new Crane Installation screen
-// import 'wtg_installation.dart';
+// import 'crane_installation.dart'; // Import the Crane Installation screen
+// import 'wtg_installation.dart'; // Import the new WTG Installation screen
 //
 // void main() {
 //   runApp(const MyApp());
@@ -317,11 +319,7 @@ class DetailScreen extends StatelessWidget {
 //           Widget nextScreen;
 //           if (title == 'Crane Platform') {
 //             nextScreen = const CraneInstallationScreen();
-//           } else {
-//             nextScreen = DetailScreen(pageTitle: title);
-//           }
-//
-//           if (title == 'WTG Installation') {
+//           } else if (title == 'WTG Installation') {
 //             nextScreen = const WtgInstallationScreen();
 //           } else {
 //             nextScreen = DetailScreen(pageTitle: title);
@@ -370,7 +368,7 @@ class DetailScreen extends StatelessWidget {
 //   }
 // }
 //
-// // Detail Page that opens when a card is clicked (Fallback for other cards)
+// // Detail Page that opens when a generic card is clicked (Fallback for Safety & Quality)
 // class DetailScreen extends StatelessWidget {
 //   final String pageTitle;
 //
@@ -420,3 +418,5 @@ class DetailScreen extends StatelessWidget {
 //     );
 //   }
 // }
+
+
