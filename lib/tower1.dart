@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:uges_portal_forms/core/utils/local_storage_service.dart';
 
 class Tower1Screen extends StatefulWidget {
   const Tower1Screen({super.key});
@@ -93,8 +96,42 @@ class _Tower1ScreenState extends State<Tower1Screen> {
     });
   }
 
-  void _submitForm() {
+  Future <void> _submitForm() async {
     if (_formKey.currentState?.validate() ?? false) {
+      final formData = {
+        "project": _selectedProject,
+        "windfarm": _selectedWindfarm,
+        "cluster": _selectedCluster,
+        "turbine": _turbine,
+        "contractor": _contractor,
+        "supervisor": _supervisor,
+        "leveling": _levelingCtrl.text,
+        "alingmentCheck": _alignmentCtrl.text,
+        "noOfBolts": _boltsCtrl.text,
+        "boltsSize": _boltSizeCtrl.text,
+        "tourqueValue": _torqueCtrl.text,
+        "instrumentUsed": _instrumentCtrl.text,
+        "grouting": _groutingCtrl.text,
+        "grountingCuring": _groutingCuringCtrl.text,
+        "grountMaterialType": _groutMaterialCtrl.text,
+        "batchNo": _batchNoCtrl.text,
+        "grountingCuringDays": _curingDaysCtrl.text,
+        "liftingStart": _liftingStart?.toIso8601String(),
+        "liftingEnd": _liftingEnd?.toIso8601String(),
+        "weather": _weather,
+        "status": _status,
+        "remaks": _remarksCtrl.text,
+        "uploadedDocument": _documentName,
+        "isVerified": _isVerified,
+        "timestamp": DateTime.now().toIso8601String(),
+      };
+
+      String jsonData = jsonEncode(formData);
+
+      await LocalStorageService.saveFormData(runtimeType.toString(), jsonData);
+
+      print(jsonData);
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Tower1 Installation data submitted successfully!')),
       );

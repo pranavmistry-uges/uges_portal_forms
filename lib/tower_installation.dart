@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 
@@ -88,6 +90,35 @@ class _TowerInstallationScreenState extends State<TowerInstallationScreen> {
 
   void _submitForm() {
     if (_formKey.currentState?.validate() ?? false) {
+      final formData = {
+        "project": _selectedProject,
+        "windfarm": _selectedWindfarm,
+        "cluster": _selectedCluster,
+        "turbine": _turbine,
+        "towerNo": _towerNo,
+        "noOfBolts": _boltsCtrl.text,
+        "tourqueValue": _torqueCtrl.text,
+        "instrumentUsed": _instrumentCtrl.text,
+        "manufacturer": _manufacturerCtrl.text,
+        "liftingStart": _liftingStart?.toIso8601String(),
+        "liftingEnd": _liftingEnd?.toIso8601String(),
+        "alignmentCheck": _alignmentCtrl.text,
+        "craneIdModel": _craneIdCtrl.text,
+        "craneCapacity": _craneCapacityCtrl.text,
+        "tourqueingSequenceRef": _sequenceCtrl.text,
+        "contractor": _contractor,
+        "supervisor": _supervisor,
+        "weather": _weather,
+        "status": _status,
+        "remarks": _remarksCtrl.text,
+        "uploadedDocument": _documentName,
+        "isVerified": _isVerified,
+        "timestamp": DateTime.now().toIso8601String(),
+      };
+
+      String jsonData = jsonEncode(formData);
+      print(jsonData);
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Tower Installation data submitted successfully!')),
       );

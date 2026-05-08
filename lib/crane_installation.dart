@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:uges_portal_forms/core/utils/local_storage_service.dart';
 
 class CraneInstallationScreen extends StatefulWidget {
   const CraneInstallationScreen({super.key});
@@ -35,6 +38,10 @@ class _CraneInstallationScreenState extends State<CraneInstallationScreen> {
 
   bool _drainageProvided = false;
 
+  // JSON Preview State
+  Map<String, dynamic>? _submittedDataMap;
+  bool _showPreview = false;
+
   @override
   void initState() {
     super.initState();
@@ -69,8 +76,37 @@ class _CraneInstallationScreenState extends State<CraneInstallationScreen> {
     });
   }
 
-  void _savePlatform() {
+  Future <void> _savePlatform() async {
     if (_formKey.currentState?.validate() ?? false) {
+      final formData = {
+        'project': _selectedProject,
+        'windfarm': _selectedWindfarm,
+        'cluster': _selectedCluster,
+        'turbineLocation': _turbineLocation,
+        'platformName': _platformNameCtrl.text,
+        'platformType': _platformType,
+        'platformLength': _lengthCtrl.text,
+        'platformWidth': _widthCtrl.text,
+        'platformDepth': _depthCtrl.text,
+        'carneModelCapacity': _craneModel,
+        'distanceFromFoundation': _distanceCtrl.text,
+        'contractor': _contractor,
+        'activityStatus': _activityStatus,
+        'fddAttachment': _fddFileName,
+        'mddAttachment': _mddFileName,
+        'drainageProvided': _drainageProvided,
+      };
+
+      String jsonData = jsonEncode(formData);
+
+      await LocalStorageService.saveFormData(runtimeType.toString(), jsonData);
+
+      print(jsonData);
+
+      setState(() {
+        _submittedDataMap = formData;
+      });
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Platform data saved successfully!')),
       );
@@ -263,6 +299,55 @@ class _CraneInstallationScreenState extends State<CraneInstallationScreen> {
                     style: TextButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16)),
                     child: const Text('Reset', style: TextStyle(color: Colors.grey, fontSize: 16)),
                   ),
+
+                  const SizedBox(height: 16,),
+
+                  //   Preview Button
+                  OutlinedButton.icon(
+                      onPressed: () {
+                        setState(() {
+                          _showPreview = !_showPreview;
+                        });
+                      },
+                      icon: Icon(_showPreview ? Icons.visibility_off : Icons.visibility),
+                      label: Text(_showPreview ? 'Hide JSON Preview' : 'Show Json Preview'),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        side: BorderSide(color: Colors.blue.shade800),
+                        foregroundColor: Colors.blue.shade800,
+                      ),
+                  ),
+
+                  //  JSON Preview Area
+                  if (_showPreview) ...[
+                    const SizedBox(height: 16,),
+                    if (_submittedDataMap != null)
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade900,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: SelectableText(
+                          const JsonEncoder.withIndent('  '). convert(_submittedDataMap),
+                          style: const TextStyle(color: Colors.greenAccent, fontFamily: 'monospace', fontSize: 13),
+                        ),
+                      )
+                    else
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade50,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.blue.shade200),
+                        ),
+                        child: const Text(
+                          'No data submitted yet. Fill the form and click submit to view JSON data',
+                          style: TextStyle(color: Colors.blue, fontStyle: FontStyle.italic),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                  ],
                 ],
               ),
             ],

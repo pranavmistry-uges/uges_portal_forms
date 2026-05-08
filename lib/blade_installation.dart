@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
@@ -82,6 +84,33 @@ class _BladeInstallationScreenState extends State<BladeInstallationScreen> {
 
   void _submitForm() {
     if (_formKey.currentState?.validate() ?? false) {
+      final formData = {
+        "project": _selectedProject,
+        "windfarm": _selectedWindfarm,
+        "cluster": _selectedCluster,
+        "turbine": _turbine,
+        "bladeNo": _bladeNo,
+        "bladeId": _bladeId,
+        "boltId": _boltId,
+        "noOfBolts": _boltsCtrl.text,
+        "liftingStart": _liftingStart?.toIso8601String(),
+        "liftingEnd": _liftingEnd?.toIso8601String(),
+        "tourqueValue": _torqueCtrl.text,
+        "instrumentUsed": _instrumentCtrl.text,
+        "weather": _weather,
+        "contractor": _contractor,
+        "supervisor": _supervisor,
+        "status": _status,
+        "remarks": _remarksCtrl.text,
+        "uploadedImage": _photoName,
+        "uploadedDocument": _documentName,
+        "isVerified": _isVerified,
+        "timestamp": DateTime.now().toIso8601String(),
+      };
+
+      String jsonData = jsonEncode(formData);
+      print(jsonData);
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Blade Installation data submitted successfully!')),
       );

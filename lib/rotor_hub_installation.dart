@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
@@ -94,6 +96,37 @@ class _RotorHubInstallationScreenState extends State<RotorHubInstallationScreen>
 
   void _submitForm() {
     if (_formKey.currentState?.validate() ?? false) {
+      final formData = {
+        "project": _selectedProject,
+        "windfarm": _selectedWindfarm,
+        "cluster": _selectedCluster,
+        "turbine": _turbine,
+        "nacelleId": _nacelleId,
+        "hubSerialNo": _hubSerial,
+        "boltId": _boltId,
+        "noOfBolts": _boltsCtrl.text,
+        "boltSizeGrade": _boltSizeGradeCtrl.text,
+        "tourqueValue": _torqueCtrl.text,
+        "lubricantUsed": _lubricantCtrl.text,
+        "materialGuide": _materialGuideCtrl.text,
+        "weight": _weightCtrl.text,
+        "pitchType": _pitchTypeCtrl.text,
+        "weather": _weather,
+        "liftingStart": _liftingStart?.toIso8601String(),
+        "liftingEnd": _liftingEnd?.toIso8601String(),
+        "contractor": _contractor,
+        "suprevisor": _supervisor,
+        "status": _status,
+        "remarks": _remarksCtrl.text,
+        "uploadedImage": _photoName,
+        "uploadedDocument": _documentName,
+        "isVerified": _isVerified,
+        "timestamp": DateTime.now().toIso8601String(),
+      };
+
+      String jsonData = jsonEncode(formData);
+      print(jsonData);
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Rotor Hub Installation data submitted successfully!')),
       );

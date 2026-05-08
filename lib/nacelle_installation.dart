@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 
@@ -87,6 +89,36 @@ class _NacelleInstallationScreenState extends State<NacelleInstallationScreen> {
 
   void _submitForm() {
     if (_formKey.currentState?.validate() ?? false) {
+      final formData = {
+        "project": _selectedProject,
+        "windfarm": _selectedWindfarm,
+        "cluster": _selectedCluster,
+        "nacelleId": _nacelleId,
+        "turbine": _turbine,
+        "generatorId": _generatorId,
+        "gearBoxId": _gearBoxId,
+        "liftId": _liftId,
+        "boltId": _boltId,
+        "noOfBolts": _boltsCtrl.text,
+        "tourqueValue": _torqueCtrl.text,
+        "instrumentUsed": _instrumentCtrl.text,
+        "slewingRim": _slewingRimCtrl.text,
+        "yawDriveDetails": _yawDriveCtrl.text,
+        "alignmentCheck": _alignmentCtrl.text,
+        "liftingStart": _liftingStart?.toIso8601String(),
+        "liftingEnd": _liftingEnd?.toIso8601String(),
+        "contractor": _contractor,
+        "supervisor": _supervisor,
+        "weather": _weather,
+        "staus": _status,
+        "uploadedDocument": _documentName,
+        "isVerified": _isVerified,
+        "timestamp": DateTime.now().toIso8601String(),
+      };
+
+      String jsonData = jsonEncode(formData);
+      print(jsonData);
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Nacelle Installation data submitted successfully!')),
       );

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 
@@ -54,6 +56,21 @@ class _RaiseNewIssueScreenState extends State<RaiseNewIssueScreen> {
 
   void _submitForm() {
     if (_formKey.currentState?.validate() ?? false) {
+      final formData = {
+        "project": _selectedProject,
+        "windfarm": _selectedWindfarm,
+        "cluster": _selectedCluster,
+        "turbine": _selectedTurbine,
+        "issueType": _issueType,
+        "processType": _processType,
+        "activity": _activity,
+        "observationDate": _observationDate?.toIso8601String(),
+        "detailsNotes": _notesCtrl.text,
+      };
+
+      String jsonData = jsonEncode(formData);
+      print(jsonData);
+
       if (_issueType == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Please select an Issue Classification (Safety or Quality)')),
@@ -203,48 +220,7 @@ class _RaiseNewIssueScreenState extends State<RaiseNewIssueScreen> {
 
               const SizedBox(height: 32),
 
-              // --- SECTION 3 ---
-              const Text(
-                '3. Evidence & Resolution',
-                style: TextStyle(color: Colors.lightBlue, fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 16),
-
-              // Photo Upload Section
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey.shade400),
-                  borderRadius: BorderRadius.circular(4),
-                  color: Colors.grey.shade50,
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        _photoName ?? 'Upload NC photo',
-                        style: TextStyle(color: _photoName == null ? Colors.grey : Colors.black87),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    ElevatedButton.icon(
-                      onPressed: _pickPhoto,
-                      icon: const Icon(Icons.image, size: 18),
-                      label: const Text('Browse File'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue.shade100,
-                        foregroundColor: Colors.blue.shade900,
-                        elevation: 0,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 40),
-
-              // Submit Button
+            // --- Section 3 ---
               ElevatedButton(
                 onPressed: _submitForm,
                 style: ElevatedButton.styleFrom(
@@ -252,9 +228,9 @@ class _RaiseNewIssueScreenState extends State<RaiseNewIssueScreen> {
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
-                child: const Text('Submit SQ record', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                child: const Text('Submit', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               ),
-              const SizedBox(height: 20),
+
             ],
           ),
         ),
@@ -272,7 +248,7 @@ class _RaiseNewIssueScreenState extends State<RaiseNewIssueScreen> {
         filled: true,
         fillColor: Colors.grey.shade50,
       ),
-      value: value,
+      initialValue: value,
       validator: (val) => val == null ? 'Required' : null,
       items: items.map((i) => DropdownMenuItem(value: i, child: Text(i))).toList(),
       onChanged: onChanged,
