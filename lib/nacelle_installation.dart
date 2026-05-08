@@ -2,12 +2,14 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:uges_portal_forms/core/utils/local_storage_service.dart';
 
 class NacelleInstallationScreen extends StatefulWidget {
   const NacelleInstallationScreen({super.key});
 
   @override
-  State<NacelleInstallationScreen> createState() => _NacelleInstallationScreenState();
+  State<NacelleInstallationScreen> createState() =>
+      _NacelleInstallationScreenState();
 }
 
 class _NacelleInstallationScreenState extends State<NacelleInstallationScreen> {
@@ -87,7 +89,7 @@ class _NacelleInstallationScreenState extends State<NacelleInstallationScreen> {
     });
   }
 
-  void _submitForm() {
+  Future<void> _submitForm() async {
     if (_formKey.currentState?.validate() ?? false) {
       final formData = {
         "project": _selectedProject,
@@ -117,10 +119,15 @@ class _NacelleInstallationScreenState extends State<NacelleInstallationScreen> {
       };
 
       String jsonData = jsonEncode(formData);
+
+      await LocalStorageService.saveFormData(runtimeType.toString(), jsonData);
+
       print(jsonData);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Nacelle Installation data submitted successfully!')),
+        const SnackBar(
+          content: Text('Nacelle Installation data submitted successfully!'),
+        ),
       );
       // Automatically reset the form after successful submission
       _resetForm();
@@ -178,7 +185,10 @@ class _NacelleInstallationScreenState extends State<NacelleInstallationScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Nacelle Installation', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+        title: const Text(
+          'Nacelle Installation',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
         backgroundColor: Colors.blue.shade800,
         foregroundColor: Colors.white,
       ),
@@ -188,19 +198,40 @@ class _NacelleInstallationScreenState extends State<NacelleInstallationScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Top Main Selection Dropdowns
-            _buildDropdown('Project', ['Project A', 'Project B'], _selectedProject, (val) => setState(() => _selectedProject = val)),
+            _buildDropdown(
+              'Project',
+              ['Project A', 'Project B'],
+              _selectedProject,
+              (val) => setState(() => _selectedProject = val),
+            ),
             const SizedBox(height: 12),
-            _buildDropdown('Windfarm', ['Windfarm North', 'Windfarm South'], _selectedWindfarm, (val) => setState(() => _selectedWindfarm = val)),
+            _buildDropdown(
+              'Windfarm',
+              ['Windfarm North', 'Windfarm South'],
+              _selectedWindfarm,
+              (val) => setState(() => _selectedWindfarm = val),
+            ),
             const SizedBox(height: 12),
-            _buildDropdown('Clusters', ['Cluster 1', 'Cluster 2'], _selectedCluster, (val) => setState(() => _selectedCluster = val)),
+            _buildDropdown(
+              'Clusters',
+              ['Cluster 1', 'Cluster 2'],
+              _selectedCluster,
+              (val) => setState(() => _selectedCluster = val),
+            ),
 
             const Divider(height: 40, thickness: 1),
 
             // Show Form conditionally
-            if (_selectedProject != null && _selectedWindfarm != null && _selectedCluster != null) ...[
+            if (_selectedProject != null &&
+                _selectedWindfarm != null &&
+                _selectedCluster != null) ...[
               const Text(
                 'Nacelle Installation form',
-                style: TextStyle(color: Colors.lightBlue, fontSize: 22, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  color: Colors.lightBlue,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 20),
 
@@ -209,22 +240,56 @@ class _NacelleInstallationScreenState extends State<NacelleInstallationScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    _buildFormDropdown('Nacelle ID', ['N-101', 'N-102', 'N-103'], _nacelleId, (v) => setState(() => _nacelleId = v)),
+                    _buildFormDropdown(
+                      'Nacelle ID',
+                      ['N-101', 'N-102', 'N-103'],
+                      _nacelleId,
+                      (v) => setState(() => _nacelleId = v),
+                    ),
                     const SizedBox(height: 16),
-                    _buildFormDropdown('Turbine', ['T-01', 'T-02', 'T-03'], _turbine, (v) => setState(() => _turbine = v)),
+                    _buildFormDropdown(
+                      'Turbine',
+                      ['T-01', 'T-02', 'T-03'],
+                      _turbine,
+                      (v) => setState(() => _turbine = v),
+                    ),
                     const SizedBox(height: 16),
-                    _buildFormDropdown('Generator ID', ['G-01', 'G-02', 'G-03'], _generatorId, (v) => setState(() => _generatorId = v)),
+                    _buildFormDropdown(
+                      'Generator ID',
+                      ['G-01', 'G-02', 'G-03'],
+                      _generatorId,
+                      (v) => setState(() => _generatorId = v),
+                    ),
                     const SizedBox(height: 16),
-                    _buildFormDropdown('Gear Box ID', ['GB-01', 'GB-02', 'GB-03'], _gearBoxId, (v) => setState(() => _gearBoxId = v)),
+                    _buildFormDropdown(
+                      'Gear Box ID',
+                      ['GB-01', 'GB-02', 'GB-03'],
+                      _gearBoxId,
+                      (v) => setState(() => _gearBoxId = v),
+                    ),
                     const SizedBox(height: 16),
-                    _buildFormDropdown('Lift ID', ['L-01', 'L-02'], _liftId, (v) => setState(() => _liftId = v)),
+                    _buildFormDropdown(
+                      'Lift ID',
+                      ['L-01', 'L-02'],
+                      _liftId,
+                      (v) => setState(() => _liftId = v),
+                    ),
                     const SizedBox(height: 16),
-                    _buildFormDropdown('Bolt ID', ['B-01', 'B-02', 'B-03'], _boltId, (v) => setState(() => _boltId = v)),
+                    _buildFormDropdown(
+                      'Bolt ID',
+                      ['B-01', 'B-02', 'B-03'],
+                      _boltId,
+                      (v) => setState(() => _boltId = v),
+                    ),
                     const SizedBox(height: 16),
 
                     _buildTextField('No. of Bolts', _boltsCtrl, isNumber: true),
                     const SizedBox(height: 16),
-                    _buildTextField('Torque Value', _torqueCtrl, isNumber: true),
+                    _buildTextField(
+                      'Torque Value',
+                      _torqueCtrl,
+                      isNumber: true,
+                    ),
                     const SizedBox(height: 16),
                     _buildTextField('Instrument Used', _instrumentCtrl),
                     const SizedBox(height: 16),
@@ -236,18 +301,46 @@ class _NacelleInstallationScreenState extends State<NacelleInstallationScreen> {
                     const SizedBox(height: 16),
 
                     // Date Pickers
-                    _buildDateField('Lifting Start', _liftingStart, () => _selectDate(context, true)),
+                    _buildDateField(
+                      'Lifting Start',
+                      _liftingStart,
+                      () => _selectDate(context, true),
+                    ),
                     const SizedBox(height: 16),
-                    _buildDateField('Lifting End', _liftingEnd, () => _selectDate(context, false)),
+                    _buildDateField(
+                      'Lifting End',
+                      _liftingEnd,
+                      () => _selectDate(context, false),
+                    ),
                     const SizedBox(height: 16),
 
-                    _buildFormDropdown('Contractor', ['Contractor X', 'Contractor Y'], _contractor, (v) => setState(() => _contractor = v)),
+                    _buildFormDropdown(
+                      'Contractor',
+                      ['Contractor X', 'Contractor Y'],
+                      _contractor,
+                      (v) => setState(() => _contractor = v),
+                    ),
                     const SizedBox(height: 16),
-                    _buildFormDropdown('Supervisor', ['Supervisor 1', 'Supervisor 2'], _supervisor, (v) => setState(() => _supervisor = v)),
+                    _buildFormDropdown(
+                      'Supervisor',
+                      ['Supervisor 1', 'Supervisor 2'],
+                      _supervisor,
+                      (v) => setState(() => _supervisor = v),
+                    ),
                     const SizedBox(height: 16),
-                    _buildFormDropdown('Weather', ['Sunny', 'Cloudy', 'Rainy', 'Windy'], _weather, (v) => setState(() => _weather = v)),
+                    _buildFormDropdown(
+                      'Weather',
+                      ['Sunny', 'Cloudy', 'Rainy', 'Windy'],
+                      _weather,
+                      (v) => setState(() => _weather = v),
+                    ),
                     const SizedBox(height: 16),
-                    _buildFormDropdown('Status', ['Pending', 'In Progress', 'Completed'], _status, (v) => setState(() => _status = v)),
+                    _buildFormDropdown(
+                      'Status',
+                      ['Pending', 'In Progress', 'Completed'],
+                      _status,
+                      (v) => setState(() => _status = v),
+                    ),
                     const SizedBox(height: 24),
 
                     // Document Upload Section
@@ -263,7 +356,11 @@ class _NacelleInstallationScreenState extends State<NacelleInstallationScreen> {
                           Expanded(
                             child: Text(
                               _documentName ?? 'No document selected',
-                              style: TextStyle(color: _documentName == null ? Colors.grey : Colors.black87),
+                              style: TextStyle(
+                                color: _documentName == null
+                                    ? Colors.grey
+                                    : Colors.black87,
+                              ),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
@@ -287,7 +384,8 @@ class _NacelleInstallationScreenState extends State<NacelleInstallationScreen> {
                     FormField<bool>(
                       initialValue: _isVerified,
                       validator: (value) {
-                        if (value != true) return 'Verification is required to proceed.';
+                        if (value != true)
+                          return 'Verification is required to proceed.';
                         return null;
                       },
                       builder: (FormFieldState<bool> state) {
@@ -310,10 +408,16 @@ class _NacelleInstallationScreenState extends State<NacelleInstallationScreen> {
                             ),
                             if (state.hasError)
                               Padding(
-                                padding: const EdgeInsets.only(left: 32.0, top: 4.0),
+                                padding: const EdgeInsets.only(
+                                  left: 32.0,
+                                  top: 4.0,
+                                ),
                                 child: Text(
                                   state.errorText!,
-                                  style: const TextStyle(color: Colors.red, fontSize: 12),
+                                  style: const TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 12,
+                                  ),
                                 ),
                               ),
                           ],
@@ -330,7 +434,13 @@ class _NacelleInstallationScreenState extends State<NacelleInstallationScreen> {
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
-                      child: const Text('Submit nacelle', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      child: const Text(
+                        'Submit nacelle',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -344,20 +454,35 @@ class _NacelleInstallationScreenState extends State<NacelleInstallationScreen> {
 
   // --- Helper Widgets ---
 
-  Widget _buildDropdown(String label, List<String> items, String? value, ValueChanged<String?> onChanged) {
+  Widget _buildDropdown(
+    String label,
+    List<String> items,
+    String? value,
+    ValueChanged<String?> onChanged,
+  ) {
     return DropdownButtonFormField<String>(
       decoration: InputDecoration(
         labelText: label,
         border: const OutlineInputBorder(),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 12,
+        ),
       ),
       value: value,
-      items: items.map((i) => DropdownMenuItem(value: i, child: Text(i))).toList(),
+      items: items
+          .map((i) => DropdownMenuItem(value: i, child: Text(i)))
+          .toList(),
       onChanged: onChanged,
     );
   }
 
-  Widget _buildFormDropdown(String label, List<String> items, String? value, ValueChanged<String?> onChanged) {
+  Widget _buildFormDropdown(
+    String label,
+    List<String> items,
+    String? value,
+    ValueChanged<String?> onChanged,
+  ) {
     return DropdownButtonFormField<String>(
       decoration: InputDecoration(
         labelText: label,
@@ -367,12 +492,18 @@ class _NacelleInstallationScreenState extends State<NacelleInstallationScreen> {
       ),
       value: value,
       validator: (val) => val == null ? 'Required' : null,
-      items: items.map((i) => DropdownMenuItem(value: i, child: Text(i))).toList(),
+      items: items
+          .map((i) => DropdownMenuItem(value: i, child: Text(i)))
+          .toList(),
       onChanged: onChanged,
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller, {bool isNumber = false}) {
+  Widget _buildTextField(
+    String label,
+    TextEditingController controller, {
+    bool isNumber = false,
+  }) {
     return TextFormField(
       controller: controller,
       keyboardType: isNumber ? TextInputType.number : TextInputType.text,
@@ -401,7 +532,9 @@ class _NacelleInstallationScreenState extends State<NacelleInstallationScreen> {
           children: [
             Text(
               _formatDate(date),
-              style: TextStyle(color: date == null ? Colors.grey.shade700 : Colors.black87),
+              style: TextStyle(
+                color: date == null ? Colors.grey.shade700 : Colors.black87,
+              ),
             ),
             const Icon(Icons.calendar_today, color: Colors.blue, size: 20),
           ],

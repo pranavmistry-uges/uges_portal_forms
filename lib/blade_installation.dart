@@ -3,12 +3,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uges_portal_forms/core/utils/local_storage_service.dart';
 
 class BladeInstallationScreen extends StatefulWidget {
   const BladeInstallationScreen({super.key});
 
   @override
-  State<BladeInstallationScreen> createState() => _BladeInstallationScreenState();
+  State<BladeInstallationScreen> createState() =>
+      _BladeInstallationScreenState();
 }
 
 class _BladeInstallationScreenState extends State<BladeInstallationScreen> {
@@ -82,7 +84,7 @@ class _BladeInstallationScreenState extends State<BladeInstallationScreen> {
     });
   }
 
-  void _submitForm() {
+  Future<void> _submitForm() async {
     if (_formKey.currentState?.validate() ?? false) {
       final formData = {
         "project": _selectedProject,
@@ -109,10 +111,15 @@ class _BladeInstallationScreenState extends State<BladeInstallationScreen> {
       };
 
       String jsonData = jsonEncode(formData);
+
+      await LocalStorageService.saveFormData(runtimeType.toString(), jsonData);
+
       print(jsonData);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Blade Installation data submitted successfully!')),
+        const SnackBar(
+          content: Text('Blade Installation data submitted successfully!'),
+        ),
       );
       // Automatically reset the form after successful submission
       _resetForm();
@@ -200,19 +207,40 @@ class _BladeInstallationScreenState extends State<BladeInstallationScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Top Main Selection Dropdowns
-            _buildDropdown('Project', ['Project A', 'Project B'], _selectedProject, (val) => setState(() => _selectedProject = val)),
+            _buildDropdown(
+              'Project',
+              ['Project A', 'Project B'],
+              _selectedProject,
+              (val) => setState(() => _selectedProject = val),
+            ),
             const SizedBox(height: 12),
-            _buildDropdown('Windfarm', ['Windfarm North', 'Windfarm South'], _selectedWindfarm, (val) => setState(() => _selectedWindfarm = val)),
+            _buildDropdown(
+              'Windfarm',
+              ['Windfarm North', 'Windfarm South'],
+              _selectedWindfarm,
+              (val) => setState(() => _selectedWindfarm = val),
+            ),
             const SizedBox(height: 12),
-            _buildDropdown('Cluster', ['Cluster 1', 'Cluster 2'], _selectedCluster, (val) => setState(() => _selectedCluster = val)),
+            _buildDropdown(
+              'Cluster',
+              ['Cluster 1', 'Cluster 2'],
+              _selectedCluster,
+              (val) => setState(() => _selectedCluster = val),
+            ),
 
             const Divider(height: 40, thickness: 1),
 
             // Show Form conditionally
-            if (_selectedProject != null && _selectedWindfarm != null && _selectedCluster != null) ...[
+            if (_selectedProject != null &&
+                _selectedWindfarm != null &&
+                _selectedCluster != null) ...[
               const Text(
                 'Blade Installation form',
-                style: TextStyle(color: Colors.lightBlueAccent, fontSize: 22, fontWeight: FontWeight.bold), // Sky blue color as requested
+                style: TextStyle(
+                  color: Colors.lightBlueAccent,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ), // Sky blue color as requested
               ),
               const SizedBox(height: 20),
 
@@ -221,36 +249,88 @@ class _BladeInstallationScreenState extends State<BladeInstallationScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    _buildFormDropdown('Turbine', ['T-01', 'T-02', 'T-03'], _turbine, (v) => setState(() => _turbine = v)),
+                    _buildFormDropdown(
+                      'Turbine',
+                      ['T-01', 'T-02', 'T-03'],
+                      _turbine,
+                      (v) => setState(() => _turbine = v),
+                    ),
                     const SizedBox(height: 16),
-                    _buildFormDropdown('Blade No.', ['Blade-1', 'Blade-2', 'Blade-3'], _bladeNo, (v) => setState(() => _bladeNo = v)),
+                    _buildFormDropdown(
+                      'Blade No.',
+                      ['Blade-1', 'Blade-2', 'Blade-3'],
+                      _bladeNo,
+                      (v) => setState(() => _bladeNo = v),
+                    ),
                     const SizedBox(height: 16),
-                    _buildFormDropdown('Blade ID', ['BID-001', 'BID-002', 'BID-003'], _bladeId, (v) => setState(() => _bladeId = v)),
+                    _buildFormDropdown(
+                      'Blade ID',
+                      ['BID-001', 'BID-002', 'BID-003'],
+                      _bladeId,
+                      (v) => setState(() => _bladeId = v),
+                    ),
                     const SizedBox(height: 16),
-                    _buildFormDropdown('Bolt ID', ['B-01', 'B-02', 'B-03'], _boltId, (v) => setState(() => _boltId = v)),
+                    _buildFormDropdown(
+                      'Bolt ID',
+                      ['B-01', 'B-02', 'B-03'],
+                      _boltId,
+                      (v) => setState(() => _boltId = v),
+                    ),
                     const SizedBox(height: 16),
 
                     _buildTextField('No. of Bolts', _boltsCtrl, isNumber: true),
                     const SizedBox(height: 16),
 
                     // Date Pickers
-                    _buildDateField('Lifting Start', _liftingStart, () => _selectDate(context, true)),
+                    _buildDateField(
+                      'Lifting Start',
+                      _liftingStart,
+                      () => _selectDate(context, true),
+                    ),
                     const SizedBox(height: 16),
-                    _buildDateField('Lifting End', _liftingEnd, () => _selectDate(context, false)),
+                    _buildDateField(
+                      'Lifting End',
+                      _liftingEnd,
+                      () => _selectDate(context, false),
+                    ),
                     const SizedBox(height: 16),
 
-                    _buildTextField('Torque Value', _torqueCtrl, isNumber: true),
+                    _buildTextField(
+                      'Torque Value',
+                      _torqueCtrl,
+                      isNumber: true,
+                    ),
                     const SizedBox(height: 16),
                     _buildTextField('Instrument Used', _instrumentCtrl),
                     const SizedBox(height: 16),
 
-                    _buildFormDropdown('Weather', ['Sunny', 'Cloudy', 'Rainy', 'Windy'], _weather, (v) => setState(() => _weather = v)),
+                    _buildFormDropdown(
+                      'Weather',
+                      ['Sunny', 'Cloudy', 'Rainy', 'Windy'],
+                      _weather,
+                      (v) => setState(() => _weather = v),
+                    ),
                     const SizedBox(height: 16),
-                    _buildFormDropdown('Contractor', ['Contractor X', 'Contractor Y'], _contractor, (v) => setState(() => _contractor = v)),
+                    _buildFormDropdown(
+                      'Contractor',
+                      ['Contractor X', 'Contractor Y'],
+                      _contractor,
+                      (v) => setState(() => _contractor = v),
+                    ),
                     const SizedBox(height: 16),
-                    _buildFormDropdown('Supervisor', ['Supervisor 1', 'Supervisor 2'], _supervisor, (v) => setState(() => _supervisor = v)),
+                    _buildFormDropdown(
+                      'Supervisor',
+                      ['Supervisor 1', 'Supervisor 2'],
+                      _supervisor,
+                      (v) => setState(() => _supervisor = v),
+                    ),
                     const SizedBox(height: 16),
-                    _buildFormDropdown('Status', ['Pending', 'In Progress', 'Completed'], _status, (v) => setState(() => _status = v)),
+                    _buildFormDropdown(
+                      'Status',
+                      ['Pending', 'In Progress', 'Completed'],
+                      _status,
+                      (v) => setState(() => _status = v),
+                    ),
                     const SizedBox(height: 16),
 
                     // Textarea
@@ -280,7 +360,11 @@ class _BladeInstallationScreenState extends State<BladeInstallationScreen> {
                           Expanded(
                             child: Text(
                               _photoName ?? 'No photo captured',
-                              style: TextStyle(color: _photoName == null ? Colors.grey : Colors.black87),
+                              style: TextStyle(
+                                color: _photoName == null
+                                    ? Colors.grey
+                                    : Colors.black87,
+                              ),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
@@ -313,7 +397,11 @@ class _BladeInstallationScreenState extends State<BladeInstallationScreen> {
                           Expanded(
                             child: Text(
                               _documentName ?? 'No document selected',
-                              style: TextStyle(color: _documentName == null ? Colors.grey : Colors.black87),
+                              style: TextStyle(
+                                color: _documentName == null
+                                    ? Colors.grey
+                                    : Colors.black87,
+                              ),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
@@ -337,7 +425,8 @@ class _BladeInstallationScreenState extends State<BladeInstallationScreen> {
                     FormField<bool>(
                       initialValue: _isVerified,
                       validator: (value) {
-                        if (value != true) return 'Verification is required to proceed.';
+                        if (value != true)
+                          return 'Verification is required to proceed.';
                         return null;
                       },
                       builder: (FormFieldState<bool> state) {
@@ -360,10 +449,16 @@ class _BladeInstallationScreenState extends State<BladeInstallationScreen> {
                             ),
                             if (state.hasError)
                               Padding(
-                                padding: const EdgeInsets.only(left: 32.0, top: 4.0),
+                                padding: const EdgeInsets.only(
+                                  left: 32.0,
+                                  top: 4.0,
+                                ),
                                 child: Text(
                                   state.errorText!,
-                                  style: const TextStyle(color: Colors.red, fontSize: 12),
+                                  style: const TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 12,
+                                  ),
                                 ),
                               ),
                           ],
@@ -380,7 +475,13 @@ class _BladeInstallationScreenState extends State<BladeInstallationScreen> {
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
-                      child: const Text('Submit blade', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      child: const Text(
+                        'Submit blade',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -394,20 +495,35 @@ class _BladeInstallationScreenState extends State<BladeInstallationScreen> {
 
   // --- Helper Widgets ---
 
-  Widget _buildDropdown(String label, List<String> items, String? value, ValueChanged<String?> onChanged) {
+  Widget _buildDropdown(
+    String label,
+    List<String> items,
+    String? value,
+    ValueChanged<String?> onChanged,
+  ) {
     return DropdownButtonFormField<String>(
       decoration: InputDecoration(
         labelText: label,
         border: const OutlineInputBorder(),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 12,
+        ),
       ),
       initialValue: value,
-      items: items.map((i) => DropdownMenuItem(value: i, child: Text(i))).toList(),
+      items: items
+          .map((i) => DropdownMenuItem(value: i, child: Text(i)))
+          .toList(),
       onChanged: onChanged,
     );
   }
 
-  Widget _buildFormDropdown(String label, List<String> items, String? value, ValueChanged<String?> onChanged) {
+  Widget _buildFormDropdown(
+    String label,
+    List<String> items,
+    String? value,
+    ValueChanged<String?> onChanged,
+  ) {
     return DropdownButtonFormField<String>(
       decoration: InputDecoration(
         labelText: label,
@@ -417,12 +533,18 @@ class _BladeInstallationScreenState extends State<BladeInstallationScreen> {
       ),
       initialValue: value,
       validator: (val) => val == null ? 'Required' : null,
-      items: items.map((i) => DropdownMenuItem(value: i, child: Text(i))).toList(),
+      items: items
+          .map((i) => DropdownMenuItem(value: i, child: Text(i)))
+          .toList(),
       onChanged: onChanged,
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller, {bool isNumber = false}) {
+  Widget _buildTextField(
+    String label,
+    TextEditingController controller, {
+    bool isNumber = false,
+  }) {
     return TextFormField(
       controller: controller,
       keyboardType: isNumber ? TextInputType.number : TextInputType.text,
@@ -451,7 +573,9 @@ class _BladeInstallationScreenState extends State<BladeInstallationScreen> {
           children: [
             Text(
               _formatDate(date),
-              style: TextStyle(color: date == null ? Colors.grey.shade700 : Colors.black87),
+              style: TextStyle(
+                color: date == null ? Colors.grey.shade700 : Colors.black87,
+              ),
             ),
             const Icon(Icons.calendar_today, color: Colors.blue, size: 20),
           ],

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:uges_portal_forms/core/utils/local_storage_service.dart';
 
 class RaiseNewIssueScreen extends StatefulWidget {
   const RaiseNewIssueScreen({super.key});
@@ -54,7 +55,7 @@ class _RaiseNewIssueScreenState extends State<RaiseNewIssueScreen> {
     });
   }
 
-  void _submitForm() {
+  Future<void> _submitForm() async {
     if (_formKey.currentState?.validate() ?? false) {
       final formData = {
         "project": _selectedProject,
@@ -69,11 +70,18 @@ class _RaiseNewIssueScreenState extends State<RaiseNewIssueScreen> {
       };
 
       String jsonData = jsonEncode(formData);
+
+      await LocalStorageService.saveFormData(runtimeType.toString(), jsonData);
+
       print(jsonData);
 
       if (_issueType == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please select an Issue Classification (Safety or Quality)')),
+          const SnackBar(
+            content: Text(
+              'Please select an Issue Classification (Safety or Quality)',
+            ),
+          ),
         );
         return;
       }
@@ -100,9 +108,9 @@ class _RaiseNewIssueScreenState extends State<RaiseNewIssueScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to pick photo')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Failed to pick photo')));
       }
     }
   }
@@ -150,23 +158,51 @@ class _RaiseNewIssueScreenState extends State<RaiseNewIssueScreen> {
               // --- SECTION 1 ---
               const Text(
                 '1. Location details',
-                style: TextStyle(color: Colors.lightBlue, fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  color: Colors.lightBlue,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 16),
-              _buildFormDropdown('Project', ['Project A', 'Project B'], _selectedProject, (val) => setState(() => _selectedProject = val)),
+              _buildFormDropdown(
+                'Project',
+                ['Project A', 'Project B'],
+                _selectedProject,
+                (val) => setState(() => _selectedProject = val),
+              ),
               const SizedBox(height: 12),
-              _buildFormDropdown('Windfarm', ['Windfarm North', 'Windfarm South'], _selectedWindfarm, (val) => setState(() => _selectedWindfarm = val)),
+              _buildFormDropdown(
+                'Windfarm',
+                ['Windfarm North', 'Windfarm South'],
+                _selectedWindfarm,
+                (val) => setState(() => _selectedWindfarm = val),
+              ),
               const SizedBox(height: 12),
-              _buildFormDropdown('Cluster', ['Cluster 1', 'Cluster 2'], _selectedCluster, (val) => setState(() => _selectedCluster = val)),
+              _buildFormDropdown(
+                'Cluster',
+                ['Cluster 1', 'Cluster 2'],
+                _selectedCluster,
+                (val) => setState(() => _selectedCluster = val),
+              ),
               const SizedBox(height: 12),
-              _buildFormDropdown('Specific Turbine', ['T-01', 'T-02', 'T-03'], _selectedTurbine, (val) => setState(() => _selectedTurbine = val)),
+              _buildFormDropdown(
+                'Specific Turbine',
+                ['T-01', 'T-02', 'T-03'],
+                _selectedTurbine,
+                (val) => setState(() => _selectedTurbine = val),
+              ),
 
               const SizedBox(height: 32),
 
               // --- SECTION 2 ---
               const Text(
                 '2. Issue Classification',
-                style: TextStyle(color: Colors.lightBlue, fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  color: Colors.lightBlue,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 16),
 
@@ -197,12 +233,31 @@ class _RaiseNewIssueScreenState extends State<RaiseNewIssueScreen> {
               ),
               const SizedBox(height: 12),
 
-              _buildFormDropdown('Process type', ['Installation', 'Maintenance', 'Transportation'], _processType, (val) => setState(() => _processType = val)),
+              _buildFormDropdown(
+                'Process type',
+                ['Installation', 'Maintenance', 'Transportation'],
+                _processType,
+                (val) => setState(() => _processType = val),
+              ),
               const SizedBox(height: 12),
-              _buildFormDropdown('Activity', ['Tower Lifting', 'Nacelle Mounting', 'Blade Attachment', 'General'], _activity, (val) => setState(() => _activity = val)),
+              _buildFormDropdown(
+                'Activity',
+                [
+                  'Tower Lifting',
+                  'Nacelle Mounting',
+                  'Blade Attachment',
+                  'General',
+                ],
+                _activity,
+                (val) => setState(() => _activity = val),
+              ),
               const SizedBox(height: 12),
 
-              _buildDateField('Observation date', _observationDate, () => _selectDate(context)),
+              _buildDateField(
+                'Observation date',
+                _observationDate,
+                () => _selectDate(context),
+              ),
               const SizedBox(height: 12),
 
               TextFormField(
@@ -215,12 +270,13 @@ class _RaiseNewIssueScreenState extends State<RaiseNewIssueScreen> {
                   filled: true,
                   fillColor: Colors.grey.shade50,
                 ),
-                validator: (val) => val == null || val.isEmpty ? 'Required' : null,
+                validator: (val) =>
+                    val == null || val.isEmpty ? 'Required' : null,
               ),
 
               const SizedBox(height: 32),
 
-            // --- Section 3 ---
+              // --- Section 3 ---
               ElevatedButton(
                 onPressed: _submitForm,
                 style: ElevatedButton.styleFrom(
@@ -228,9 +284,11 @@ class _RaiseNewIssueScreenState extends State<RaiseNewIssueScreen> {
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
-                child: const Text('Submit', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                child: const Text(
+                  'Submit',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
               ),
-
             ],
           ),
         ),
@@ -240,7 +298,12 @@ class _RaiseNewIssueScreenState extends State<RaiseNewIssueScreen> {
 
   // --- Helper Widgets ---
 
-  Widget _buildFormDropdown(String label, List<String> items, String? value, ValueChanged<String?> onChanged) {
+  Widget _buildFormDropdown(
+    String label,
+    List<String> items,
+    String? value,
+    ValueChanged<String?> onChanged,
+  ) {
     return DropdownButtonFormField<String>(
       decoration: InputDecoration(
         labelText: label,
@@ -250,7 +313,9 @@ class _RaiseNewIssueScreenState extends State<RaiseNewIssueScreen> {
       ),
       initialValue: value,
       validator: (val) => val == null ? 'Required' : null,
-      items: items.map((i) => DropdownMenuItem(value: i, child: Text(i))).toList(),
+      items: items
+          .map((i) => DropdownMenuItem(value: i, child: Text(i)))
+          .toList(),
       onChanged: onChanged,
     );
   }
@@ -270,7 +335,9 @@ class _RaiseNewIssueScreenState extends State<RaiseNewIssueScreen> {
           children: [
             Text(
               _formatDate(date),
-              style: TextStyle(color: date == null ? Colors.grey.shade700 : Colors.black87),
+              style: TextStyle(
+                color: date == null ? Colors.grey.shade700 : Colors.black87,
+              ),
             ),
             const Icon(Icons.calendar_today, color: Colors.blue, size: 20),
           ],
